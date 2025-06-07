@@ -44,6 +44,13 @@ services:
       - "traefik.providers.http.routers.router-https.tls.certresolver=default-resolver" # Use default resolver for HTTPS router
       - "traefik.http.services.c2-https-service.loadbalancer.server.url=http://host.docker.internal:443" # URL for HTTPS service
 
+      - "traefik.http.routers.nginx.rule=Host(`ninomae.my.id`) || Host(`www.ninomae.my.id`)" # Rule for Nginx decoy website
+      - "traefik.http.routers.nginx.entrypoints=web-decoy,websecure-decoy" # Entry points for Nginx decoy website
+      - "traefik.http.services.nginx-service.loadbalancer.server.url=http://nginx:80" # URL for Nginx service
+      - "traefik.http.services.nginx-service.loadbalancer.passHostHeader=true" # Pass the host header to the Nginx service
+      - "traefik.http.routers.nginx.tls=true" # Enable TLS for Nginx decoy website
+      - "traefik.http.routers.nginx.tls.certresolver=default-resolver" # Use default resolver for TLS
+
   nginx:
     container_name: nginx
     image: nginx
@@ -55,12 +62,6 @@ services:
       - "./nginx/default.conf:/etc/nginx/conf.d/default.conf"
     labels:
       - "traefik.enable=true" # Enable Traefik for this service
-      - "traefik.http.routers.nginx.rule=Host(`ninomae.my.id`) || Host(`www.ninomae.my.id`)" # Rule for Nginx decoy website
-      - "traefik.http.routers.nginx.entrypoints=web-decoy,websecure-decoy" # Entry points for Nginx decoy website
-      - "traefik.http.services.nginx-service.loadbalancer.server.url=http://nginx:80" # URL for Nginx service
-      - "traefik.http.services.nginx-service.loadbalancer.passHostHeader=true" # Pass the host header to the Nginx service
-      - "traefik.http.routers.nginx.tls=true" # Enable TLS for Nginx decoy website
-      - "traefik.http.routers.nginx.tls.certresolver=default-resolver" # Use default resolver for TLS
 
   # Cloudflare Tunnel Service
   cloudflare-tunnel:
