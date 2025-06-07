@@ -36,13 +36,13 @@ services:
       - "traefik.http.middlewares.auth.basicauth.users=yume:$$apr1$$R2KU7RNj$$x3Tpu8Y3z/y8LceGbYDzt/"
 
       - "traefik.providers.http.routers.router-http.entrypoints=web" # HTTP router entry point
-      - "traefik.providers.http.routers.router-http.rule=Host(`api.ninomae.my.id`)" # Rule for HTTP router
+      # - "traefik.providers.http.routers.router-http.rule=Host(`api.ninomae.my.id`)" # Rule for HTTP router
       - "traefik.providers.http.routers.router-http.service=c2-http-service" # Service for HTTP router
       - "traefik.http.services.c2-http-service.loadbalancer.server.url=http://host.docker.internal:80" # URL for HTTP service
       - "traefik.http.services.c2-http-service.loadbalancer.server."
 
       - "traefik.providers.http.routers.router-https.entrypoints=websecure" # HTTPS router entry point
-      - "traefik.providers.http.routers.router-https.rule=Host(`api.ninomae.my.id`)" # Rule for HTTPS router
+      # - "traefik.providers.http.routers.router-https.rule=Host(`api.ninomae.my.id`)" # Rule for HTTPS router
       - "traefik.providers.http.routers.router-https.service=c2-https-service" # Service for HTTPS router
       - "traefik.http.services.c2-https-service.loadbalancer.server.url=http://host.docker.internal:443" # URL for HTTPS service
 
