@@ -16,6 +16,7 @@ global:
 log:
   filePath: "./logs/logs.log"
   format: json
+  level: DEBUG
 
 ################################################################
 # EntryPoints configuration
