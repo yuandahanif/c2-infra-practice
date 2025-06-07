@@ -1,0 +1,27 @@
+http:
+  # Add the router
+  routers:
+    router-http:
+        pollTimeout: "5s"
+        entryPoints:
+          - "web"
+        endpoint: "http://127.0.0.1:80"
+        rule: "Host(`api.ninomae.my.id`)"
+
+    router-https:
+        entryPoints:
+          - "websecure"
+        pollTimeout: "5s"
+        endpoint: "http://127.0.0.1:443"
+        rule: "Host(`api.ninomae.my.id`)"
+        tls: {}
+
+  # services:
+  #   http-service:
+  #     loadBalancer:
+  #       servers:
+  #         - url: "http://127.0.0.1:80/"
+  #   router-https:
+  #     loadBalancer:
+  #       servers:
+  #         - url: "http://127.0.0.1:443/"
