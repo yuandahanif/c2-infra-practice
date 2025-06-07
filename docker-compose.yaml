@@ -3,7 +3,7 @@ services:
     # The official v3 Traefik docker image
     image: traefik:v3.4
     # Enables the web UI and tells Traefik to listen to docker
-    command: --configFile=./treafik.yaml
+    command: --configFile=./configs/treafik.yaml
     networks:
       - cf-network
       - nginx
@@ -14,7 +14,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - "./letsencrypt:/letsencrypt"
       - "./logs:/logs"
-      - "./treafik.yaml:traefik.yaml"
+      - "./configs:/configs"
 
   nginx:
     container_name: nginx
