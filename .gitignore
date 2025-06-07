@@ -1,0 +1,5 @@
+.env
+
+letsencrypt/*.json
+letsencrypt/*.pem
+letsencrypt/*.key

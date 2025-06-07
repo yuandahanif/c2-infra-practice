@@ -6,34 +6,48 @@ services:
     command: --configFile=./treafik.yaml
     networks:
       - cf-network
+      - nginx
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
       # So that Traefik can listen to the Docker events
       - /var/run/docker.sock:/var/run/docker.sock
-      - "$(pwd)/acme.json:/acme.json"
+      - "./letsencrypt:/letsencrypt"
+      - "./logs:/logs"
 
+  nginx:
+    container_name: nginx
+    image: nginx
+    restart: unless-stopped
+    networks:
+      - nginx
+    volumes:
+      - "./nginx/var/www/html:/usr/share/nginx/html" # Mount the decoy website files to the Nginx container
+      - "./nginx/default.conf:/etc/nginx/conf.d/default.conf"
+  
   # Cloudflare Tunnel Service
   cloudflare-tunnel:
-    image: cloudflare/cloudflared:latest              # Pull the latest version of the Cloudflare Tunnel image
-    container_name: cloudflare-tunnel                 # Name of the Cloudflare Tunnel container
-    hostname: cloudflare-tunnel                       # Hostname for the Cloudflare Tunnel container
-    restart: unless-stopped                           # Restart the container unless manually stopped
+    image: cloudflare/cloudflared:latest # Pull the latest version of the Cloudflare Tunnel image
+    container_name: cloudflare-tunnel # Name of the Cloudflare Tunnel container
+    hostname: cloudflare-tunnel # Hostname for the Cloudflare Tunnel container
+    restart: unless-stopped # Restart the container unless manually stopped
 
     # Network mode configuration
     networks:
       - cf-network
 
     # Command to run Cloudflare Tunnel
-    command: tunnel run                               # Command to start the Cloudflare tunnel
+    command: tunnel run # Command to start the Cloudflare tunnel
 
     # Volume configuration for time synchronization and hosts file persistence
     volumes:
-      - /etc/localtime:/etc/localtime:ro              # Synchronize time with the host
+      - /etc/localtime:/etc/localtime:ro # Synchronize time with the host
 
     # Environment variables for Cloudflare Tunnel
     environment:
-      - "TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}"     # Pass the Cloudflare Tunnel token from environment variable
+      - "TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}" # Pass the Cloudflare Tunnel token from environment variable
 
 networks:
   cf-network:
+  nginx:
+    external: true

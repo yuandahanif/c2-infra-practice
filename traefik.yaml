@@ -13,6 +13,10 @@ global:
   checkNewVersion: true
   sendAnonymousUsage: true
 
+log:
+  filePath: "./logs/logs.log"
+  format: json
+
 ################################################################
 # EntryPoints configuration
 ################################################################
@@ -48,14 +52,15 @@ api:
   # Optional
   # Default: false
   #
- insecure: false
+  insecure:
+    false
 
-  # Enabled Dashboard
-  #
-  # Optional
-  # Default: true
-  #
- dashboard: true
+    # Enabled Dashboard
+    #
+    # Optional
+    # Default: true
+    #
+  dashboard: true
 
 ################################################################
 # Docker configuration backend
@@ -63,13 +68,13 @@ api:
 
 providers:
   # Enable Docker configuration backend
- docker:
+  docker:
     # Docker server endpoint. Can be a tcp or a unix socket endpoint.
     #
     # Required
     # Default: "unix:///var/run/docker.sock"
     #
-#    endpoint: tcp://10.10.10.10:2375
+    endpoint: unix:///var/run/docker.sock
 
     # Default host rule.
     #
@@ -78,19 +83,12 @@ providers:
     #
 #    defaultRule: Host(`{{ normalize .Name }}.docker.localhost`)
 
-    # Expose containers by default in traefik
-    #
-    # Optional
-    # Default: true
-    #
+# Expose containers by default in traefik
+#
+# Optional
+# Default: true
+#
 #    exposedByDefault: false
-  file:
-    filename: "./configs/file.provider.yaml"
-    watch: true
-
-  http:
-    filename: "./configs/http.provider.yaml"
-    watch: true
 
 # Dynamic Configuration
 http:
@@ -100,6 +98,39 @@ http:
       service: api@internal
       middlewares:
         - auth
+
+    router-http:
+      pollTimeout: "5s"
+      entryPoints:
+        - "web"
+      endpoint: "http://127.0.0.1:80"
+      rule: "Host(`api.ninomae.my.id`)"
+
+    router-https:
+      entryPoints:
+        - "websecure"
+      pollTimeout: "5s"
+      endpoint: "http://127.0.0.1:443"
+      rule: "Host(`api.ninomae.my.id`)"
+      tls:
+        certResolver: default-resolver
+
+    nginx:
+      rule: Host(`ninomae.my.id`) || Host(`www.ninomae.my.id`)
+      entryPoints:
+        - web-decoy
+        - websecure-decoy
+      service: nginx-service
+      tls:
+        certResolver: default-resolver
+
+  services:
+    nginx-service:
+      loadBalancer:
+        servers:
+          - url: "http://nginx:80"
+        passHostHeader: true
+
   middlewares:
     auth:
       basicAuth:
@@ -110,7 +141,7 @@ certificatesResolvers:
   default-resolver:
     acme:
       email: 20523134@students.uiia.c.id
-      storage: acme.json
+      storage: "letsencrypt/acme.json"
       httpChallenge:
         # used during the challenge
-        entryPoint: web
+        entryPoint: web-decoy
