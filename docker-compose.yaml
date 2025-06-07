@@ -32,14 +32,17 @@ services:
       - "treafik.certificatesresolvers.default-resolver.acme.email=20523134@students.uiia.c.id" # Email for Let's Encrypt registration
       - "treafik.certificatesresolvers.default-resolver.acme.storage=/letsencrypt/acme.json" # Storage for Let's Encrypt certificates
 
-      - "traefik.http.routers.router-http.entrypoints=web" # HTTP router entry point
-      - "traefik.http.routers.router-http.rule=Host(`api.ninomae.my.id`)" # Rule for HTTP router
-      - "traefik.http.routers.router-http.endpoint=http://127.0.1:80" # Endpoint for HTTP router
+      - "traefik.providers.http.routers.router-http.entrypoints=web" # HTTP router entry point
+      - "traefik.providers.http.routers.router-http.rule=Host(`api.ninomae.my.id`)" # Rule for HTTP router
+      - "traefik.providers.http.routers.router-http.service=c2-http-service" # Service for HTTP router
+      - "traefik.http.services.c2-http-service.loadbalancer.server.url=http://host.docker.internal:80" # URL for HTTP service
+      
 
-      - "traefik.http.routers.router-https.entrypoints=websecure" # HTTPS router entry point
-      - "traefik.http.routers.router-https.rule=Host(`api.ninomae.my.id`)" # Rule for HTTPS router
-      - "traefik.http.routers.router-https.endpoint=http://127.0.1:443" # Endpoint for HTTPS router
-      - "traefik.http.routers.router-https.tls.certresolver=default-resolver" # Use default resolver for HTTPS router
+      - "traefik.providers.http.routers.router-https.entrypoints=websecure" # HTTPS router entry point
+      - "traefik.providers.http.routers.router-https.rule=Host(`api.ninomae.my.id`)" # Rule for HTTPS router
+      - "traefik.providers.http.routers.router-https.service=c2-https-service" # Service for HTTPS router
+      - "traefik.providers.http.routers.router-https.tls.certresolver=default-resolver" # Use default resolver for HTTPS router
+      - "traefik.http.services.c2-https-service.loadbalancer.server.url=http://host.docker.internal:443" # URL for HTTPS service
 
   nginx:
     container_name: nginx
@@ -58,7 +61,7 @@ services:
       - "traefik.http.services.nginx-service.loadbalancer.server.url=http://nginx:80" # URL for Nginx service
       - "traefik.http.routers.nginx.tls=true" # Enable TLS for Nginx decoy website
       - "traefik.http.routers.nginx.tls.certresolver=default-resolver" # Use default resolver for TLS
-      - "traefik.http.routers.nginx.loadBalancer.passHostHeader=true" # Pass the host header to the Nginx service
+      - "traefik.http.routers.nginx.loadbalancer.passHostHeader=true" # Pass the host header to the Nginx service
 
   # Cloudflare Tunnel Service
   cloudflare-tunnel:
