@@ -51,4 +51,3 @@ services:
 networks:
   cf-network:
   nginx:
-    external: true
