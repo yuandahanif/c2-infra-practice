@@ -59,9 +59,9 @@ services:
       - "traefik.http.routers.nginx.entrypoints=web-decoy,websecure-decoy" # Entry points for Nginx decoy website
       - "traefik.http.services.nginx-service.loadbalancer.server.port=80" # Port for Nginx service
       - "traefik.http.services.nginx-service.loadbalancer.server.url=http://nginx:80" # URL for Nginx service
+      - "traefik.http.services.nginx-service.loadbalancer.passHostHeader=true" # Pass the host header to the Nginx service
       - "traefik.http.routers.nginx.tls=true" # Enable TLS for Nginx decoy website
       - "traefik.http.routers.nginx.tls.certresolver=default-resolver" # Use default resolver for TLS
-      - "traefik.http.routers.nginx.loadbalancer.passHostHeader=true" # Pass the host header to the Nginx service
 
   # Cloudflare Tunnel Service
   cloudflare-tunnel:
