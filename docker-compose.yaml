@@ -35,7 +35,7 @@ services:
       - "traefik.http.routers.router-http.entrypoints=web" # HTTP router entry point
       - "traefik.http.routers.router-http.rule=Host(`api.ninomae.my.id`)" # Rule for HTTP router
       - "traefik.http.routers.router-http.endpoint=http://127.0.1:80" # Endpoint for HTTP router
-      
+
       - "traefik.http.routers.router-https.entrypoints=websecure" # HTTPS router entry point
       - "traefik.http.routers.router-https.rule=Host(`api.ninomae.my.id`)" # Rule for HTTPS router
       - "traefik.http.routers.router-https.endpoint=http://127.0.1:443" # Endpoint for HTTPS router
@@ -58,7 +58,7 @@ services:
       - "traefik.http.services.nginx-service.loadbalancer.server.url=http://nginx:80" # URL for Nginx service
       - "traefik.http.routers.nginx.tls=true" # Enable TLS for Nginx decoy website
       - "traefik.http.routers.nginx.tls.certresolver=default-resolver" # Use default resolver for TLS
-      - "traefik.http.routers.nginx.passHostHeader=true" # Pass the host header to the Nginx service
+      - "traefik.http.routers.nginx.loadBalancer.passHostHeader=true" # Pass the host header to the Nginx service
 
   # Cloudflare Tunnel Service
   cloudflare-tunnel:
@@ -82,6 +82,9 @@ services:
     environment:
       - "TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}" # Pass the Cloudflare Tunnel token from environment variable
 
+    labels:
+      - "traefik.enable=false" # Disable Traefik for this service
+    
 networks:
   cf-network:
   nginx:
