@@ -38,13 +38,13 @@ services:
       - "traefik.providers.http.routers.router-http.entrypoints=web" # HTTP router entry point
       - "traefik.providers.http.routers.router-http.rule=Host(`api.ninomae.my.id`)" # Rule for HTTP router
       - "traefik.providers.http.routers.router-http.service=c2-http-service" # Service for HTTP router
-      - "traefik.http.services.c2-http-service.loadbalancer.server.url=http://host.docker.internal:80" # URL for HTTP service
+      - "traefik.http.services.c2-http-service.loadbalancer.server.url=host.docker.internal:80" # URL for HTTP service
       - "traefik.http.services.c2-http-service.loadbalancer.server."
 
       - "traefik.providers.http.routers.router-https.entrypoints=websecure" # HTTPS router entry point
       - "traefik.providers.http.routers.router-https.rule=Host(`api.ninomae.my.id`)" # Rule for HTTPS router
       - "traefik.providers.http.routers.router-https.service=c2-https-service" # Service for HTTPS router
-      - "traefik.http.services.c2-https-service.loadbalancer.server.url=http://host.docker.internal:443" # URL for HTTPS service
+      - "traefik.http.services.c2-https-service.loadbalancer.server.url=host.docker.internal:443" # URL for HTTPS service
 
       - "traefik.http.routers.nginx.rule=Host(`ninomae.my.id`) || Host(`www.ninomae.my.id`)" # Rule for Nginx decoy website
       - "traefik.http.routers.nginx.entrypoints=web-decoy,websecure-decoy" # Entry points for Nginx decoy website
