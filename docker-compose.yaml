@@ -11,6 +11,11 @@ services:
       # - "--certificatesresolvers.default-resolver.acme.email=20523134@students.uii.ac.id"
       # - "--certificatesresolvers.default-resolver.acme.storage=/letsencrypt/acme.json"
 
+      - "--entryPoints.sliver.address=:8888"
+      - "--entryPoints.sliver.allowACMEByPass=true"
+      - "--entryPoints.sliver.forwardedHeaders.insecure"
+      # - "--entryPoints.sliver-udp.address=:8888/udp"
+
       - "--entrypoints.web.address=:8000"
       - "--entrypoints.websecure.address=:4430"
       - "--entrypoints.web-decoy.address=:8080"
@@ -23,6 +28,7 @@ services:
       - nginx
     extra_hosts:
       - "host.docker.internal:host-gateway"
+
     volumes:
       # So that Traefik can listen to the Docker events
       - /var/run/docker.sock:/var/run/docker.sock
@@ -35,8 +41,8 @@ services:
       - "traefik.http.routers.dashboard.middlewares=auth"
       - "traefik.http.middlewares.auth.basicauth.users=yume:$$apr1$$R2KU7RNj$$x3Tpu8Y3z/y8LceGbYDzt/"
 
-      - "traefik.providers.http.routers.router-http.entrypoints=web,websecure" # HTTP router entry point
-      - "traefik.providers.http.routers.router-http.rule=Host(`api.ninomae.my.id`)" # Rule for HTTP router
+      - "traefik.providers.http.routers.router-http.entrypoints=sliver" # HTTP router entry point
+      # - "traefik.providers.http.routers.router-http.rule=Host(`api.ninomae.my.id`)" # Rule for HTTP router
       - "traefik.providers.http.routers.router-http.service=c2-http-service" # Service for HTTP router
       - "traefik.http.services.c2-http-service.loadbalancer.server.url=http://host.docker.internal:80" # URL for HTTP service
       - "traefik.http.services.c2-http-service.loadbalancer.passHostHeader=true" # Pass the host header to the Nginx service
