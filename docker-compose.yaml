@@ -42,7 +42,7 @@ services:
       - "traefik.http.middlewares.auth.basicauth.users=yume:$$apr1$$Bs5BfSTj$$se88wBCdy27p/k1qS8Iuf."
 
       - "traefik.http.routers.router-http.entrypoints=sliver" # HTTP router entry point
-      - "traefik.http.routers.router-http.rule=Host(`api.ninomae.my.id`)" # Rule for HTTP router
+      # - "traefik.http.routers.router-http.rule=Host(`api.ninomae.my.id`)" # Rule for HTTP router
       - "traefik.http.routers.router-http.service=c2-http-service" # Service for HTTP router
       - "traefik.http.services.c2-http-service.loadbalancer.server.url=http://host.docker.internal:80" # URL for HTTP service
       - "traefik.http.services.c2-http-service.loadbalancer.passHostHeader=true" # Pass the host header to the Nginx service
@@ -62,8 +62,8 @@ services:
     volumes:
       - "./nginx/var/www/html:/usr/share/nginx/html" # Mount the decoy website files to the Nginx container
       - "./nginx/default.conf:/etc/nginx/conf.d/default.conf"
-    labels:
-      - "traefik.enable=true" # Enable Traefik for this service
+    # labels:
+    #   - "traefik.enable=true" # Enable Traefik for this service
 
   # Cloudflare Tunnel Service
   cloudflare-tunnel:
