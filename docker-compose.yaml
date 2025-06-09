@@ -6,10 +6,10 @@ services:
     command:
       - "--providers.docker"
       - "--api=true"
-      - "--certificatesresolvers.default-resolver.acme.httpchallenge=true"
-      - "--certificatesresolvers.default-resolver.acme.httpchallenge.entrypoint=web"
-      - "--certificatesresolvers.default-resolver.acme.email=20523134@students.uii.ac.id"
-      - "--certificatesresolvers.default-resolver.acme.storage=/letsencrypt/acme.json"
+      # - "--certificatesresolvers.default-resolver.acme.httpchallenge=true"
+      # - "--certificatesresolvers.default-resolver.acme.httpchallenge.entrypoint=web"
+      # - "--certificatesresolvers.default-resolver.acme.email=20523134@students.uii.ac.id"
+      # - "--certificatesresolvers.default-resolver.acme.storage=/letsencrypt/acme.json"
 
       - "--entrypoints.web.address=:8000"
       - "--entrypoints.websecure.address=:4430"
