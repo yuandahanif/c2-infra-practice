@@ -73,6 +73,7 @@ services:
     restart: unless-stopped # Restart the container unless manually stopped
 
     # Network mode configuration
+    network_mode: host
     networks:
       - cf-network
 
@@ -80,7 +81,7 @@ services:
       - "host.docker.internal:host-gateway"
 
     # Command to run Cloudflare Tunnel
-    command: tunnel run # Command to start the Cloudflare tunnel
+    command: tunnel run --protocol http2 # Command to start the Cloudflare tunnel
 
     # Volume configuration for time synchronization and hosts file persistence
     volumes:
