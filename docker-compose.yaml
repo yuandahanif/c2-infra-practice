@@ -44,7 +44,7 @@ services:
       - "traefik.http.routers.router-http.entrypoints=sliver" # HTTP router entry point
       # - "traefik.http.routers.router-http.rule=Host(`api.ninomae.my.id`)" # Rule for HTTP router
       - "traefik.http.routers.router-http.service=c2-http-service" # Service for HTTP router
-      - "traefik.http.services.c2-http-service.loadbalancer.server.url=host.docker.internal:443" # URL for HTTP service
+      - "traefik.http.services.c2-http-service.loadbalancer.server.url=http://host.docker.internal:443" # URL for HTTP service
       - "traefik.http.services.c2-http-service.loadbalancer.passHostHeader=true" # Pass the host header to the Nginx service
 
       - "traefik.http.routers.nginx.rule=Host(`ninomae.my.id`) || Host(`www.ninomae.my.id`)" # Rule for Nginx decoy website
@@ -75,6 +75,9 @@ services:
     # Network mode configuration
     networks:
       - cf-network
+
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
     # Command to run Cloudflare Tunnel
     command: tunnel run # Command to start the Cloudflare tunnel
