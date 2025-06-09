@@ -36,9 +36,9 @@ services:
       - "traefik.http.middlewares.auth.basicauth.users=yume:$$apr1$$R2KU7RNj$$x3Tpu8Y3z/y8LceGbYDzt/"
 
       - "traefik.providers.http.routers.router-http.entrypoints=web,websecure" # HTTP router entry point
-      # - "traefik.providers.http.routers.router-http.rule=Host(`api.ninomae.my.id`)" # Rule for HTTP router
+      - "traefik.providers.http.routers.router-http.rule=Host(`api.ninomae.my.id`)" # Rule for HTTP router
       - "traefik.providers.http.routers.router-http.service=c2-http-service" # Service for HTTP router
-      - "traefik.http.services.c2-http-service.loadbalancer.server.url=http://host.docker.internal:443" # URL for HTTP service
+      - "traefik.http.services.c2-http-service.loadbalancer.server.url=http://host.docker.internal:80" # URL for HTTP service
       - "traefik.http.services.c2-http-service.loadbalancer.passHostHeader=true" # Pass the host header to the Nginx service
 
 
