@@ -11,8 +11,8 @@ services:
       - "--certificatesresolvers.default-resolver.acme.email=20523134@students.uii.ac.id"
       - "--certificatesresolvers.default-resolver.acme.storage=/letsencrypt/acme.json"
 
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.web.address=:8000"
+      - "--entrypoints.websecure.address=:4430"
       - "--entrypoints.web-decoy.address=:8080"
       - "--entrypoints.websecure-decoy.address=:4433"
 
@@ -35,18 +35,18 @@ services:
       - "traefik.http.routers.dashboard.middlewares=auth"
       - "traefik.http.middlewares.auth.basicauth.users=yume:$$apr1$$R2KU7RNj$$x3Tpu8Y3z/y8LceGbYDzt/"
 
-      - "traefik.providers.http.routers.router-http.entrypoints=web" # HTTP router entry point
+      - "traefik.providers.http.routers.router-http.entrypoints=web,websecure" # HTTP router entry point
       # - "traefik.providers.http.routers.router-http.rule=Host(`api.ninomae.my.id`)" # Rule for HTTP router
       - "traefik.providers.http.routers.router-http.service=c2-http-service" # Service for HTTP router
-      - "traefik.http.services.c2-http-service.loadbalancer.server.url=http://host.docker.internal:80" # URL for HTTP service
+      - "traefik.http.services.c2-http-service.loadbalancer.server.url=http://host.docker.internal:443" # URL for HTTP service
       - "traefik.http.services.c2-http-service.loadbalancer.passHostHeader=true" # Pass the host header to the Nginx service
 
 
-      - "traefik.providers.http.routers.router-https.entrypoints=websecure" # HTTPS router entry point
+      # - "traefik.providers.http.routers.router-https.entrypoints=websecure" # HTTPS router entry point
       # - "traefik.providers.http.routers.router-https.rule=Host(`api.ninomae.my.id`)" # Rule for HTTPS router
-      - "traefik.providers.http.routers.router-https.service=c2-https-service" # Service for HTTPS router
-      - "traefik.http.services.c2-https-service.loadbalancer.server.url=http://host.docker.internal:443" # URL for HTTPS service
-      - "traefik.http.services.c2-https-service.loadbalancer.passHostHeader=true" # Pass the host header to the Nginx service
+      # - "traefik.providers.http.routers.router-https.service=c2-https-service" # Service for HTTPS router
+      # - "traefik.http.services.c2-https-service.loadbalancer.server.url=http://host.docker.internal:443" # URL for HTTPS service
+      # - "traefik.http.services.c2-https-service.loadbalancer.passHostHeader=true" # Pass the host header to the Nginx service
 
 
       - "traefik.http.routers.nginx.rule=Host(`ninomae.my.id`) || Host(`www.ninomae.my.id`)" # Rule for Nginx decoy website
