@@ -41,8 +41,8 @@ services:
       - "traefik.http.routers.dashboard.middlewares=auth"
       - "traefik.http.middlewares.auth.basicauth.users=yume:$$apr1$$Bs5BfSTj$$se88wBCdy27p/k1qS8Iuf."
 
-      - "traefik.http.routers.router-http.entrypoints=sliver" # HTTP router entry point
-      # - "traefik.http.routers.router-http.rule=Host(`api.ninomae.my.id`)" # Rule for HTTP router
+      - "traefik.http.routers.router-http.entrypoints=sliver,web,websecure" # HTTP router entry point
+      - "traefik.http.routers.router-http.rule=Host(`api.ninomae.my.id`) || Host(`www.api.ninomae.my.id`) " # Rule for HTTP router
       - "traefik.http.routers.router-http.service=c2-http-service" # Service for HTTP router
       - "traefik.http.services.c2-http-service.loadbalancer.server.url=http://host.docker.internal:443" # URL for HTTP service
       - "traefik.http.services.c2-http-service.loadbalancer.passHostHeader=true" # Pass the host header to the Nginx service
@@ -73,7 +73,6 @@ services:
     restart: unless-stopped # Restart the container unless manually stopped
 
     # Network mode configuration
-    network_mode: host
     networks:
       - cf-network
 
