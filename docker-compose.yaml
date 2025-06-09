@@ -39,21 +39,13 @@ services:
       - "traefik.http.routers.dashboard.rule=Host(`tf-dashboard.ninomae.my.id`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
       - "traefik.http.routers.dashboard.service=api@internal"
       - "traefik.http.routers.dashboard.middlewares=auth"
-      - "traefik.http.middlewares.auth.basicauth.users=yume:$$apr1$$R2KU7RNj$$x3Tpu8Y3z/y8LceGbYDzt/"
+      - "traefik.http.middlewares.auth.basicauth.users=yume:$$apr1$$Bs5BfSTj$$se88wBCdy27p/k1qS8Iuf."
 
-      - "traefik.providers.http.routers.router-http.entrypoints=sliver" # HTTP router entry point
-      # - "traefik.providers.http.routers.router-http.rule=Host(`api.ninomae.my.id`)" # Rule for HTTP router
-      - "traefik.providers.http.routers.router-http.service=c2-http-service" # Service for HTTP router
+      - "traefik.http.routers.router-http.entrypoints=sliver" # HTTP router entry point
+      - "traefik.http.routers.router-http.rule=Host(`api.ninomae.my.id`)" # Rule for HTTP router
+      - "traefik.http.routers.router-http.service=c2-http-service" # Service for HTTP router
       - "traefik.http.services.c2-http-service.loadbalancer.server.url=http://host.docker.internal:80" # URL for HTTP service
       - "traefik.http.services.c2-http-service.loadbalancer.passHostHeader=true" # Pass the host header to the Nginx service
-
-
-      # - "traefik.providers.http.routers.router-https.entrypoints=websecure" # HTTPS router entry point
-      # - "traefik.providers.http.routers.router-https.rule=Host(`api.ninomae.my.id`)" # Rule for HTTPS router
-      # - "traefik.providers.http.routers.router-https.service=c2-https-service" # Service for HTTPS router
-      # - "traefik.http.services.c2-https-service.loadbalancer.server.url=http://host.docker.internal:443" # URL for HTTPS service
-      # - "traefik.http.services.c2-https-service.loadbalancer.passHostHeader=true" # Pass the host header to the Nginx service
-
 
       - "traefik.http.routers.nginx.rule=Host(`ninomae.my.id`) || Host(`www.ninomae.my.id`)" # Rule for Nginx decoy website
       - "traefik.http.routers.nginx.entrypoints=web-decoy,websecure-decoy" # Entry points for Nginx decoy website
@@ -83,9 +75,6 @@ services:
     # Network mode configuration
     networks:
       - cf-network
-
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
 
     # Command to run Cloudflare Tunnel
     command: tunnel run # Command to start the Cloudflare tunnel
