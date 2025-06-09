@@ -78,6 +78,9 @@ services:
     networks:
       - cf-network
 
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
     # Command to run Cloudflare Tunnel
     command: tunnel run # Command to start the Cloudflare tunnel
 
